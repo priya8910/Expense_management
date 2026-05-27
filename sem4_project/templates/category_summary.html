@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Category Summary{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-lg mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0">Spending by Category</h4>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-lg">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">Category Breakdown</h4>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for category in summary_data %}
+                    <a href="{{ url_for('category_transactions', category=category[0]) }}"
+                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        {{ category[0] }}
+                        <span class="badge bg-primary rounded-pill">₹{{ category[1] }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Initialize category chart
+    const ctx = document.getElementById('categoryChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: {{ category_names|default([])|tojson }},
+            datasets: [{
+                data: {{ category_totals|default([])|tojson }},
+                backgroundColor: [
+                    '#ff6384', '#36a2eb', '#ffce56', '#4bc0c0',
+                    '#9966ff', '#ff9f40', '#e7e9ed', '#f44336'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'right' },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `₹${context.parsed}`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

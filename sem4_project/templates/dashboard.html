@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card summary-card">
+            <div class="card-body">
+                <h5 class="card-title">Total Expenses</h5>
+                <h2 class="card-text">₹{{ total_expense|default(0)|round(2) }}</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Recent Transactions</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        {% for t in recent_transactions %}
+                        <tr>
+                            <td>{{ t[2] }}</td>
+                            <td>₹{{ t[3] }}</td>
+                            <td>{{ t[4][:10] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="chart-container mt-4">
+    <canvas id="categoryChart"></canvas>
+</div>
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('categoryChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ category_totals|map(attribute='0')|list|tojson }},
+            datasets: [{
+                data: {{ category_totals|map(attribute='1')|list|tojson }},
+                backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff']
+            }]
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}

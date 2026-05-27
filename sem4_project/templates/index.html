@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10 text-center">
+            <!-- Hero Section -->
+            <div class="hero-section bg-primary text-white p-4 rounded-3 shadow-lg">
+                <h1 class="display-5 mb-3">Smart Expense Manager</h1>
+                <p class="lead">Track, Analyze, and Optimize Your Expenses</p>
+            </div>
+
+            <!-- Main Feature Cards -->
+            <div class="row mt-4 g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-lg text-center hover-effect">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-plus-circle fs-1 text-success"></i></h5>
+                            <a href="{{ url_for('add_expense') }}" class="btn btn-success btn-lg w-100">
+                                Add New Expense
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-lg text-center hover-effect">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-bar-chart-line fs-1 text-info"></i></h5>
+                            <a href="{{ url_for('dashboard') }}" class="btn btn-info btn-lg w-100">
+                                View Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-lg text-center hover-effect">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-folder fs-1 text-warning"></i></h5>
+                            <a href="/category_summary" class="btn btn-warning btn-lg w-100">
+                                📂 View Category Summary
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-lg text-center hover-effect">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-file-text fs-1 text-danger"></i></h5>
+                            <a href="/detailed_transactions" class="btn btn-danger btn-lg w-100">
+                                📂 Detailed Transactions
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats Section -->
+            <div class="row mt-5 g-4">
+                <!-- Budget Overview -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card stat-card shadow-sm text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Monthly Budget</h5>
+                            <h2 class="text-primary">₹25,000</h2>
+                            <div class="progress mt-2">
+                                <div class="progress-bar bg-warning" style="width: 65%">65%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spending Breakdown Pie Chart -->
+                <div class="col-md-6 col-lg-4 d-flex justify-content-center">
+                    <div class="card shadow-sm w-100 text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Spending Breakdown</h5>
+                            <div class="d-flex justify-content-center">
+                                <canvas id="spendingChart" style="max-width: 250px; max-height: 250px;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Bills & Reminders -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card stat-card shadow-sm text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Upcoming Bills</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">📅 Rent - ₹12,000 (Due 5th)</li>
+                                <li class="list-group-item">📅 Electricity - ₹2,500 (Due 10th)</li>
+                                <li class="list-group-item">📅 Internet - ₹999 (Due 15th)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Initialize Spending Chart
+    const ctx = document.getElementById('spendingChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Food', 'Rent', 'Entertainment', 'Bills', 'Other'],
+            datasets: [{
+                data: [5000, 12000, 3000, 4000, 2000],
+                backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `₹${context.parsed}`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

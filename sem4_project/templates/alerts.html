@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Budget Alerts{% endblock %}
+
+{% block content %}
+<div class="card shadow-lg">
+    <div class="card-header bg-danger text-white">
+        <h4 class="mb-0">Budget Alerts</h4>
+    </div>
+    <div class="card-body">
+        {% if alerts %}
+        <div class="alert-list">
+            {% for alert in alerts %}
+            <div class="alert alert-{{ 'danger' if 'exceeded' in alert else 'warning' }} d-flex align-items-center">
+                <i class="bi bi-{{ 'exclamation-triangle' if 'exceeded' in alert else 'exclamation-circle' }} me-3 fs-4"></i>
+                <div>{{ alert }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center text-muted py-4">
+            <i class="bi bi-check-circle fs-1"></i>
+            <h4 class="mt-3">No Active Alerts</h4>
+            <p>All budgets are within safe limits</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

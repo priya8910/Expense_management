@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Set Budget{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow-lg mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Set New Budget</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" name="category" required>
+                            <option value="">Select Category</option>
+                            {% for cat in category_mapping.values() | unique %}
+                                <option value="{{ cat }}">{{ cat }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Amount</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₹</span>
+                            <input type="number" class="form-control" name="amount" step="0.01" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Save Budget</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-lg">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">Current Budgets</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Budget</th>
+                                <th>Spent</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if budgets %}
+                                {% for budget in budgets %}
+                                <tr class="{% if budget.spent and budget.amount and budget.spent >= budget.amount %}table-danger
+                                           {% elif budget.spent and budget.amount and budget.spent >= budget.amount * 0.9 %}table-warning
+                                           {% endif %}">
+                                    <td>{{ budget.category }}</td>
+                                    <td>₹{{ budget.amount }}</td>
+                                    <td>₹{{ budget.spent }}</td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted">No budget set yet</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

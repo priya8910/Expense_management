@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{{ category }} Transactions{% endblock %}
+
+{% block content %}
+<div class="card shadow-lg">
+    <div class="card-header bg-primary text-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">{{ category }} Transactions</h4>
+            <a href="{{ url_for('category_summary') }}" class="btn btn-light">
+                <i class="bi bi-arrow-left"></i> Back to Categories
+            </a>
+        </div>
+    </div>
+    
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card stat-card bg-light">
+                    <div class="card-body text-center">
+                        <h6 class="text-muted">Total Spent</h6>
+                        <h3 class="text-primary">₹{{ total_spent }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction[2] }}</td>  <!-- Timestamp -->
+                        <td>{{ transaction[0] }}</td>  <!-- Description -->
+                        <td class="fw-bold">₹{{ transaction[1] }}</td>  <!-- Price -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
